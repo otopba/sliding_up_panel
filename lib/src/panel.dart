@@ -202,10 +202,10 @@ class SlidingUpPanel extends StatefulWidget {
         super(key: key);
 
   @override
-  _SlidingUpPanelState createState() => _SlidingUpPanelState();
+  SlidingUpPanelState createState() => SlidingUpPanelState();
 }
 
-class _SlidingUpPanelState extends State<SlidingUpPanel>
+class SlidingUpPanelState extends State<SlidingUpPanel>
     with SingleTickerProviderStateMixin {
   late AnimationController _ac;
   late ScrollController _sc;
@@ -446,8 +446,7 @@ class _SlidingUpPanelState extends State<SlidingUpPanel>
       return GestureDetector(
         onVerticalDragUpdate: (DragUpdateDetails dets) =>
             onGestureSlide(dets.delta.dy),
-        onVerticalDragEnd: (DragEndDetails dets) =>
-            onGestureEnd(dets.velocity),
+        onVerticalDragEnd: (DragEndDetails dets) => onGestureEnd(dets.velocity),
         child: child,
       );
     }
@@ -646,9 +645,9 @@ class _SlidingUpPanelState extends State<SlidingUpPanel>
 }
 
 class PanelController {
-  _SlidingUpPanelState? _panelState;
+  SlidingUpPanelState? _panelState;
 
-  void _addState(_SlidingUpPanelState panelState) {
+  void _addState(SlidingUpPanelState panelState) {
     this._panelState = panelState;
   }
 
