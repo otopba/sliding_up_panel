@@ -445,9 +445,9 @@ class _SlidingUpPanelState extends State<SlidingUpPanel>
     if (widget.panel != null) {
       return GestureDetector(
         onVerticalDragUpdate: (DragUpdateDetails dets) =>
-            _onGestureSlide(dets.delta.dy),
+            onGestureSlide(dets.delta.dy),
         onVerticalDragEnd: (DragEndDetails dets) =>
-            _onGestureEnd(dets.velocity),
+            onGestureEnd(dets.velocity),
         child: child,
       );
     }
@@ -458,15 +458,15 @@ class _SlidingUpPanelState extends State<SlidingUpPanel>
       onPointerMove: (PointerMoveEvent p) {
         _vt.addPosition(p.timeStamp,
             p.position); // add current position for velocity tracking
-        _onGestureSlide(p.delta.dy);
+        onGestureSlide(p.delta.dy);
       },
-      onPointerUp: (PointerUpEvent p) => _onGestureEnd(_vt.getVelocity()),
+      onPointerUp: (PointerUpEvent p) => onGestureEnd(_vt.getVelocity()),
       child: child,
     );
   }
 
   // handles the sliding gesture
-  void _onGestureSlide(double dy) {
+  void onGestureSlide(double dy) {
     // only slide the panel if scrolling is not enabled
     if (!_scrollingEnabled) {
       if (widget.slideDirection == SlideDirection.UP)
@@ -490,7 +490,7 @@ class _SlidingUpPanelState extends State<SlidingUpPanel>
   }
 
   // handles when user stops sliding
-  void _onGestureEnd(Velocity v) {
+  void onGestureEnd(Velocity v) {
     double minFlingVelocity = 365.0;
     double kSnap = 8;
 
