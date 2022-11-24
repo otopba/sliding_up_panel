@@ -215,6 +215,8 @@ class SlidingUpPanelState extends State<SlidingUpPanel>
 
   bool _isPanelVisible = true;
 
+  final _headerKey = GlobalKey();
+
   @override
   void initState() {
     super.initState();
@@ -362,7 +364,11 @@ class SlidingUpPanelState extends State<SlidingUpPanel>
                                   widget.slideDirection == SlideDirection.DOWN
                                       ? 0.0
                                       : null,
-                              child: widget.header ?? SizedBox(),
+                              child: Container(
+                                    key: _headerKey,
+                                    child: widget.header,
+                                  ) ??
+                                  SizedBox(),
                             )
                           : Container(),
 
@@ -445,7 +451,7 @@ class SlidingUpPanelState extends State<SlidingUpPanel>
     if (widget.panel != null) {
       return GestureDetector(
         onVerticalDragUpdate: (DragUpdateDetails dets) =>
-            onGestureSlide(dets.delta.dy),
+            onGestureSlide(dets.delta.dy, dets.globalPosition),
         onVerticalDragEnd: (DragEndDetails dets) => onGestureEnd(dets.velocity),
         child: child,
       );
@@ -457,17 +463,31 @@ class SlidingUpPanelState extends State<SlidingUpPanel>
       onPointerMove: (PointerMoveEvent p) {
         _vt.addPosition(p.timeStamp,
             p.position); // add current position for velocity tracking
-        onGestureSlide(p.delta.dy);
+        onGestureSlide(p.delta.dy, p.position);
       },
       onPointerUp: (PointerUpEvent p) => onGestureEnd(_vt.getVelocity()),
       child: child,
     );
   }
 
+  bool _isPositionOnOrUpperHeader(Offset position) {
+    if (widget.header == null) return false;
+
+    final context = _headerKey.currentContext;
+    if (context == null) return false;
+
+    final renderObject = context.findRenderObject();
+    if (renderObject is! RenderBox) return false;
+
+    final childOffset = renderObject.localToGlobal(Offset.zero);
+
+    return position.dy <= (childOffset.dy + renderObject.size.height);
+  }
+
   // handles the sliding gesture
-  void onGestureSlide(double dy) {
+  void onGestureSlide(double dy, Offset offset) {
     // only slide the panel if scrolling is not enabled
-    if (!_scrollingEnabled) {
+    if (!_scrollingEnabled || _isPositionOnOrUpperHeader(offset)) {
       if (widget.slideDirection == SlideDirection.UP)
         _ac.value -= dy / (widget.maxHeight - widget.minHeight);
       else
