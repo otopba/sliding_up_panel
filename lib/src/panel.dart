@@ -210,7 +210,7 @@ class SlidingUpPanelState extends State<SlidingUpPanel>
   late AnimationController _ac;
   late ScrollController _sc;
 
-  bool _scrollingEnabled = false;
+  bool scrollingEnabled = false;
   VelocityTracker _vt = new VelocityTracker.withKind(PointerDeviceKind.touch);
 
   bool _isPanelVisible = true;
@@ -242,7 +242,7 @@ class SlidingUpPanelState extends State<SlidingUpPanel>
     // draggable and panel scrolling is enabled
     _sc = new ScrollController();
     _sc.addListener(() {
-      if (widget.isDraggable && !_scrollingEnabled) _sc.jumpTo(0);
+      if (widget.isDraggable && !scrollingEnabled) _sc.jumpTo(0);
     });
 
     widget.controller?._addState(this);
@@ -487,7 +487,7 @@ class SlidingUpPanelState extends State<SlidingUpPanel>
   // handles the sliding gesture
   void onGestureSlide(double dy, Offset offset) {
     // only slide the panel if scrolling is not enabled
-    if (!_scrollingEnabled || _isPositionOnOrUpperHeader(offset)) {
+    if (!scrollingEnabled || _isPositionOnOrUpperHeader(offset)) {
       if (widget.slideDirection == SlideDirection.UP)
         _ac.value -= dy / (widget.maxHeight - widget.minHeight);
       else
@@ -500,9 +500,9 @@ class SlidingUpPanelState extends State<SlidingUpPanel>
     if (_isPanelOpen && _sc.hasClients && _sc.offset <= 0) {
       setState(() {
         if (dy < 0) {
-          _scrollingEnabled = true;
+          scrollingEnabled = true;
         } else {
-          _scrollingEnabled = false;
+          scrollingEnabled = false;
         }
       });
     }
@@ -518,7 +518,7 @@ class SlidingUpPanelState extends State<SlidingUpPanel>
 
     // if scrolling is allowed and the panel is open, we don't want to close
     // the panel if they swipe up on the scrollable
-    if (_isPanelOpen && _scrollingEnabled) return;
+    if (_isPanelOpen && scrollingEnabled) return;
 
     //check if the velocity is sufficient to constitute fling to end
     double visualVelocity =
