@@ -261,7 +261,7 @@ class SlidingUpPanelState extends State<SlidingUpPanel>
                 animation: _ac,
                 builder: (context, child) {
                   return Positioned(
-                    top: widget.parallaxEnabled ? _getParallax() : 0.0,
+                    top: widget.parallaxEnabled ? getParallax() : 0.0,
                     child: child ?? SizedBox(),
                   );
                 },
@@ -430,7 +430,7 @@ class SlidingUpPanelState extends State<SlidingUpPanel>
     super.dispose();
   }
 
-  double _getParallax() {
+  double getParallax() {
     if (widget.slideDirection == SlideDirection.UP)
       return -_ac.value *
           (widget.maxHeight - widget.minHeight) *
